@@ -52,13 +52,13 @@ async function registerUser(req, res) {
 
 
 async function loginUser(req, res) {
-    const { email, password, username } = req.body
+    const { identifier, password } = req.body
 
 
     const user = await userModel.findOne({
         $or: [
-            { email },
-            { username }
+            { email: identifier },
+            { username: identifier }
         ]
     }).select("+password")
 
@@ -88,10 +88,10 @@ async function loginUser(req, res) {
 
 
     return res.status(200).json({
-        message: "user log in successfully" ,
+        message: "user log in successfully",
         user: {
             id: user._id,
-            username: user.username ,
+            username: user.username,
             email: user.email
         }
     })
@@ -100,21 +100,21 @@ async function loginUser(req, res) {
 }
 
 
-async function getMe(req , res) {
+async function getMe(req, res) {
     const user = await userModel.findById(req.user.id)
 
     res.status(200).json({
-        message: "User fetched successfully" ,
+        message: "User fetched successfully",
         user
     })
 }
 
 
-async function logoutUser(req , res){
+async function logoutUser(req, res) {
     const token = req.cookies.token
     res.clearCookie("token")
 
-    await redis.set(token , Date.now().toString() , "EX" , 60*60)
+    await redis.set(token, Date.now().toString(), "EX", 60 * 60)
 
 
     res.status(200).json({
@@ -128,8 +128,8 @@ async function logoutUser(req , res){
 
 
 module.exports = {
-    registerUser ,
-    loginUser , 
-    getMe ,
+    registerUser,
+    loginUser,
+    getMe,
     logoutUser
 }
