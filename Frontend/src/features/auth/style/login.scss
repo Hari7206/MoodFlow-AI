@@ -1,12 +1,8 @@
-// ============================================================
-//  MooFlow AI — Login Page
-//  All classes prefixed with .login- — zero conflict with register
-//  Dark blue · Grid BG · Blue spotlights · Bebas Neue + Outfit
-// ============================================================
+
 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap');
 
-// ── Tokens ────────────────────────────────────────────────────
+
 $l-bg            : #05080f;
 $l-card-bg       : rgba(8, 13, 26, 0.78);
 $l-card-border   : rgba(82, 148, 255, 0.16);
@@ -20,7 +16,6 @@ $l-input-border  : rgba(61, 139, 255, 0.16);
 $l-r-card        : 20px;
 $l-r-input       : 10px;
 
-// ── Reset (scoped so it won't bleed) ─────────────────────────
 .login-main *,
 .login-main *::before,
 .login-main *::after {
@@ -29,7 +24,6 @@ $l-r-input       : 10px;
   padding: 0;
 }
 
-// ── Main shell ────────────────────────────────────────────────
 .login-main {
   min-height: 100vh;
   display: flex;
@@ -42,7 +36,6 @@ $l-r-input       : 10px;
   padding: 20px;
 }
 
-// ── Grid background ───────────────────────────────────────────
 .login-bg-grid {
   position: fixed;
   inset: 0;
@@ -57,7 +50,6 @@ $l-r-input       : 10px;
   mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 30%, transparent 100%);
 }
 
-// ── Spotlights ────────────────────────────────────────────────
 .login-spot {
   position: fixed;
   border-radius: 50%;
@@ -103,7 +95,6 @@ $l-r-input       : 10px;
   100% { opacity: .6;  transform: scale(.93);  }
 }
 
-// ── Split card ────────────────────────────────────────────────
 .login-card {
   position: relative;
   z-index: 2;
@@ -128,7 +119,6 @@ $l-r-input       : 10px;
   to   { opacity: 1; transform: none; }
 }
 
-// ── LEFT — GIF panel ──────────────────────────────────────────
 .login-gif-panel {
   flex: 0 0 43%;
   position: relative;
@@ -200,7 +190,7 @@ $l-r-input       : 10px;
   text-shadow: 0 4px 28px rgba(0,0,0,.85);
 }
 
-// ── RIGHT — form panel ────────────────────────────────────────
+
 .login-form-panel {
   flex: 1;
   display: flex;
@@ -240,7 +230,6 @@ $l-r-input       : 10px;
   letter-spacing: .01em;
 }
 
-// ── Form ──────────────────────────────────────────────────────
 .login-form-panel form {
   display: flex;
   flex-direction: column;
@@ -292,7 +281,7 @@ $l-r-input       : 10px;
   }
 }
 
-// ── Meta row ─────────────────────────────────────────────────
+
 .login-form-meta {
   display: flex;
   justify-content: space-between;
@@ -323,7 +312,6 @@ $l-r-input       : 10px;
   &:hover { color: $l-blue; }
 }
 
-// ── Submit button ─────────────────────────────────────────────
 .login-form-panel button[type='submit'] {
   margin-top: 6px;
   padding: 13px;
@@ -366,7 +354,7 @@ $l-r-input       : 10px;
   }
 }
 
-// ── Register link ─────────────────────────────────────────────
+
 .login-register-link {
   text-align: center;
   margin-top: 18px;
@@ -382,7 +370,7 @@ $l-r-input       : 10px;
   }
 }
 
-// ── Loading screen ────────────────────────────────────────────
+
 .login-loading-screen {
   display: flex;
   gap: 10px;
@@ -409,7 +397,7 @@ $l-r-input       : 10px;
   to   { opacity: 1; transform: none; }
 }
 
-// ── Responsive ───────────────────────────────────────────────
+
 @media (max-width: 680px) {
   .login-card {
     flex-direction: column;

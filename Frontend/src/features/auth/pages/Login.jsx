@@ -33,10 +33,8 @@ function Login() {
       <div className="login-spot login-spot--cyan"   aria-hidden="true" />
       <div className="login-spot login-spot--violet" aria-hidden="true" />
 
-      {/* ── split card ── */}
       <div className="login-card">
 
-        {/* LEFT — drop your GIF here */}
         <div className="login-gif-panel">
           <div className="login-gif-placeholder">
             
@@ -50,7 +48,6 @@ function Login() {
           </div>
         </div>
 
-        {/* RIGHT — login form */}
         <div className="login-form-panel">
           <div className="login-form-header">
             <h1>Welcome Back</h1>
