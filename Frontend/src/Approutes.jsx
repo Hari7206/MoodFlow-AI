@@ -5,6 +5,7 @@ import Login from './features/auth/pages/Login'
 import Register from './features/auth/pages/Register'
 function Approutes() {
   return (
+    // routes
    <BrowserRouter>
     <Routes>
    <Route path="/" element={<h1>Hey there</h1>} />
