@@ -42,8 +42,18 @@ export async function RegisterUser(email, username, password) {
 }
 
 export async function getMe() {
-  const response =  await api.get("/get-me")
-  return response.data
+
+  try {
+
+    const response = await api.get("/get-me")
+    return response.data
+
+  } catch (err) {
+
+    console.log(err)
+
+    return null
+  }
 }
 
 

@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import '../style/login.scss'
 import { useAuth } from '../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
   const { handleLogin, loading } = useAuth()
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword]     = useState('')
+
+  const navigate = useNavigate()
 
   if (loading) {
     return (
@@ -22,6 +25,7 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault()
     handleLogin(identifier, password)
+    navigate("/")
   }
 
   return (
