@@ -17,74 +17,93 @@ export const initModel = async ({ landmarkerRef }) => {
 };
 
 export const startDetection = async (params) => {
+
   const {
     videoRef,
     landmarkerRef,
     streamRef,
     setExpression,
-    animationRef,
   } = params;
 
   if (!landmarkerRef.current) return;
 
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+  });
+
   streamRef.current = stream;
 
   videoRef.current.srcObject = stream;
 
-  await new Promise((res) => {
-    videoRef.current.onloadedmetadata = res;
+  await new Promise((resolve) => {
+    videoRef.current.onloadedmetadata = resolve;
   });
 
   await videoRef.current.play();
 
-  let startTime = Date.now();
+  return new Promise((resolve) => {
 
-  const detect = () => {
-    if (!landmarkerRef.current || !videoRef.current) return;
+    setTimeout(() => {
 
-    if (videoRef.current.videoWidth === 0) {
-      animationRef.current = requestAnimationFrame(detect);
-      return;
-    }
+      const results = landmarkerRef.current.detectForVideo(
+        videoRef.current,
+        performance.now()
+      );
 
-    const results = landmarkerRef.current.detectForVideo(
-      videoRef.current,
-      performance.now()
-    );
+      if (results.faceBlendshapes?.length > 0) {
 
-    if (results.faceBlendshapes?.length > 0) {
-      const b = results.faceBlendshapes[0].categories;
+        const b = results.faceBlendshapes[0].categories;
 
-      const get = (name) =>
-        b.find((x) => x.categoryName === name)?.score || 0;
+        const get = (name) =>
+          b.find((x) => x.categoryName === name)?.score || 0;
 
-      const smile = (get("mouthSmileLeft") + get("mouthSmileRight")) / 2;
-      const frown = (get("mouthFrownLeft") + get("mouthFrownRight")) / 2;
-      const browDown = (get("browDownLeft") + get("browDownRight")) / 2;
-      const browUp = get("browInnerUp");
-      const jaw = get("jawOpen");
-      const squint = (get("eyeSquintLeft") + get("eyeSquintRight")) / 2;
+        const smile =
+          (get("mouthSmileLeft") + get("mouthSmileRight")) / 2;
 
-      let expr = "Neutral 😐";
+        const frown =
+          (get("mouthFrownLeft") + get("mouthFrownRight")) / 2;
 
-      if (smile > 0.35) {
-        expr = "Happy 😄";
-      } else if (jaw > 0.35 && browUp > 0.3) {
-        expr = "Surprised 😲";
-      } else if (smile < 0.2 && (squint > 0.25 || browDown > 0.2)) {
-        expr = "Angry 😠";
-      } else if (frown > 0.12 || (browUp > 0.18 && smile < 0.15)) {
-        expr = "Sad 😢";
+        const browDown =
+          (get("browDownLeft") + get("browDownRight")) / 2;
+
+        const browUp = get("browInnerUp");
+
+        const jaw = get("jawOpen");
+
+        const squint =
+          (get("eyeSquintLeft") + get("eyeSquintRight")) / 2;
+
+        let expr = "neutral";
+
+        if (smile > 0.35) {
+          expr = "happy";
+        } else if (jaw > 0.35 && browUp > 0.3) {
+          expr = "surprised";
+        } else if (
+          smile < 0.2 &&
+          (squint > 0.25 || browDown > 0.2)
+        ) {
+          expr = "angry";
+        } else if (
+          frown > 0.12 ||
+          (browUp > 0.18 && smile < 0.15)
+        ) {
+          expr = "sad";
+        }
+
+        setExpression(expr);
+
+        resolve(expr);
+
+      } else {
+
+        setExpression("neutral");
+
+        resolve("neutral");
+
       }
 
-      setExpression(expr);
-    }
+    }, 3000);
 
-    if (Date.now() - startTime < 3000) {
-      animationRef.current = requestAnimationFrame(detect);
-    }
-  };
-
-  detect();
+  });
 };

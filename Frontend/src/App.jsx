@@ -2,15 +2,22 @@ import React from 'react'
 import FaceExpression from './features/expression/components/FaceExpression'
 import { AuthContextProvider } from './features/auth/AuthContextProvider'
 import Approutes from './approutes'
+import { SongContextProvider } from './features/home/SongContext'
 
 
 function App() {
 
   return (
 
-<AuthContextProvider>
-      <Approutes />
-</AuthContextProvider>
+    <AuthContextProvider>
+
+      <SongContextProvider>
+
+        <Approutes />
+
+      </SongContextProvider>
+
+    </AuthContextProvider>
 
 
   )
