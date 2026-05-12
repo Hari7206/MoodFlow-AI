@@ -1,7 +1,7 @@
 import React from 'react'
 import { createContext } from 'react'
 import { useState } from 'react'
-import { LoginUser, LogoutUser, RegisterUser } from './services/auth.api'
+import { LoginUser, LogoutUser, RegisterUser , getMe } from './services/auth.api'
 
 
 
@@ -60,10 +60,23 @@ export function AuthContextProvider({ children }) {
     }
 
 
+    async function handleGetMe() {
+            try {
+            setLoading(true)
+           const data  = await getMe()
+            setUser(data.user)
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
 
 
     return (
-        <AuthContext.Provider value={{ user, loading, handleLogin, handleLogout, handleRegister }}>
+        <AuthContext.Provider value={{ user, loading, handleLogin, handleLogout, handleRegister , handleGetMe }}>
             {children}
         </AuthContext.Provider>
     )

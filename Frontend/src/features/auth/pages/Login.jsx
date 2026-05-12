@@ -26,7 +26,7 @@ function Login() {
 
   return (
     <main className="login-main">
-      {/* ── background layers ── */}
+
       <div className="login-bg-grid"           aria-hidden="true" />
       <div className="login-spot login-spot--blue"   aria-hidden="true" />
       <div className="login-spot login-spot--indigo" aria-hidden="true" />
