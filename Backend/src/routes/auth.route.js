@@ -16,6 +16,11 @@ router.get("/get-me" , authMiddleware.authUser , authController.getMe)
 
 
 //  this we will use for the logout
-router.get("/logout" , authController.logoutUser)
+router.get("/logout" , authMiddleware.authUser , authController.logoutUser)
+
+
+
+
+
 
 module.exports = router

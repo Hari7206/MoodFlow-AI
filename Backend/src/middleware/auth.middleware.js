@@ -1,5 +1,4 @@
-const blacklistTokenModel = require("../model/blacklist.model");
-const userModel = require("../model/user.model")
+
 const jwt = require("jsonwebtoken")
 const redis = require("../config/cache")
 
@@ -9,22 +8,21 @@ async function authUser(req, res, next) {
 
     if (!token) {
         return res.status(401).json({
-            message: "Token not found"
+            message: "Unauthorized, token missing"
         });
     }
 
 
-    const isBlacklisted = await redis.get(token)
+   const blacklisted = await redis.get(token)
 
 
-    if(isBlacklisted){
+    if(blacklisted){
         return res.status(401).json({
-            message: "Invalid Token"
+            message: "Invalid or expired token"
         })
     }
     
     try {
-
         const decoded = jwt.verify(
             token,
             process.env.JWT_SECRET
@@ -37,7 +35,7 @@ async function authUser(req, res, next) {
     } catch (err) {
 
         return res.status(401).json({
-            message: "Invalid token"
+            message: "Invalid or expired token"
         });
 
     }

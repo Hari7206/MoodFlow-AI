@@ -1,6 +1,7 @@
 const userModel = require("../model/user.model")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs");
+const storageService = require("../services/storage.service")
 const blacklistTokenModel = require("../model/blacklist.model")
 const redis = require("../config/cache")
 
@@ -8,7 +9,7 @@ const redis = require("../config/cache")
 
 
 async function registerUser(req, res) {
-    const { username, email, password } = req.body
+    const { username, email, password, name, bio, interests, profilePic } = req.body
 
 
     const isUserAlreadyExsist = await userModel.findOne({
@@ -29,7 +30,11 @@ async function registerUser(req, res) {
     const user = await userModel.create({
         username,
         email,
-        password: hash
+        password: hash,
+        name: name || "",
+        bio: bio || "",
+        profilePic: profilePic || undefined,
+        interests: interests || ["happy"]
     })
 
 
@@ -84,7 +89,11 @@ async function loginUser(req, res) {
         expiresIn: "3d"
     })
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false
+    })
 
 
     return res.status(200).json({
@@ -92,7 +101,12 @@ async function loginUser(req, res) {
         user: {
             id: user._id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            name: user.name,
+            bio: user.bio,
+            profilePic: user.profilePic,
+            role: user.role,
+            interests: user.interests
         }
     })
 
@@ -101,7 +115,13 @@ async function loginUser(req, res) {
 
 
 async function getMe(req, res) {
-    const user = await userModel.findById(req.user.id)
+    const user = await userModel.findById(req.user.id).select("-password")
+
+    if (!user) {
+    return res.status(404).json({
+        message: "User not found"
+    })
+}
 
     res.status(200).json({
         message: "User fetched successfully",
@@ -112,9 +132,17 @@ async function getMe(req, res) {
 
 async function logoutUser(req, res) {
     const token = req.cookies.token
+
+    if (!token) {
+    return res.status(401).json({
+        message: "Unauthorized"
+    })
+}
+
+
     res.clearCookie("token")
 
-    await redis.set(token, Date.now().toString(), "EX", 60 * 60)
+    await redis.set(token, Date.now().toString(), "EX", 60 * 60 * 24 * 3)
 
 
     res.status(200).json({
@@ -125,11 +153,73 @@ async function logoutUser(req, res) {
 
 
 
+async function updateUser(req, res) {
+    try {
+        const userId = req.user.id
+
+        const updateData = {}
+
+        if (req.body.name) {
+            updateData.name = req.body.name
+        }
+
+        if (req.body.bio) {
+            updateData.bio = req.body.bio
+        }
+
+        if (req.body.interests) {
+            updateData.interests = req.body.interests
+        }
+
+        // PROFILE IMAGE (only if file sent)
+        if (req.file) {
+            const uploaded = await storageService.uploadFile({
+                buffer: req.file.buffer,
+                filename: "profile-" + userId,
+                folder: "/modify/profiles"
+            })
+
+            updateData.profilePic = uploaded.url
+        }
+
+        // If user sends nothing
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                message: "No data provided to update"
+            })
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(
+            userId,
+            updateData,
+            { new: true }
+        ).select("-password")
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user: updatedUser
+        })
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Server error",
+            error: err.message
+        })
+    }
+}
+
+module.exports = {
+    updateUser
+}
+
+
+
 
 
 module.exports = {
     registerUser,
     loginUser,
     getMe,
-    logoutUser
+    logoutUser ,
+    updateUser
 }
