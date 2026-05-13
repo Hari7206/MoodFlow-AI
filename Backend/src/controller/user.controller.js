@@ -171,7 +171,7 @@ async function updateUser(req, res) {
             updateData.interests = req.body.interests
         }
 
-        // PROFILE IMAGE (only if file sent)
+    
         if (req.file) {
             const uploaded = await storageService.uploadFile({
                 buffer: req.file.buffer,
@@ -182,7 +182,7 @@ async function updateUser(req, res) {
             updateData.profilePic = uploaded.url
         }
 
-        // If user sends nothing
+        
         if (Object.keys(updateData).length === 0) {
             return res.status(400).json({
                 message: "No data provided to update"
