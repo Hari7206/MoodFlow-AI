@@ -17,7 +17,7 @@ function Approutes() {
    <Route path="/login" element={<Login />} />
    <Route path="/register" element={<Register />} />
    <Route path="/face" element={<Mood />} />
-   <Route path="/userdashboard" element={<Dashboard />} />
+   <Route path="/userDashboard" element={<Dashboard />} />
    <Route path="/admin" element={<Admin />} />
 </Routes>
    </BrowserRouter>
