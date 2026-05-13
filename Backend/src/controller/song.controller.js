@@ -145,10 +145,30 @@ async function getPlaylist(req, res) {
 }
 
 
+async function getPendingSongs(req, res) {
+  try {
+    const songs = await songModel.find({
+      status: "pending"
+    }).sort({ createdAt: -1 })
+
+    return res.status(200).json({
+      message: "Pending songs fetched",
+      songs
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Server error",
+      error: err.message
+    })
+  }
+}
+
 
 module.exports = {
     uploadSong,
     getSong,
     updateSongStatus,
-    getPlaylist
+    getPlaylist ,
+    getPendingSongs
 }

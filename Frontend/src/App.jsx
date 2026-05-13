@@ -4,6 +4,7 @@ import { AuthContextProvider } from './features/auth/AuthContextProvider'
 import Approutes from './approutes'
 import { SongContextProvider } from './features/home/SongContext'
 import { DashboardContextProvider } from './features/dashboard/DashboardContext'
+import { AdminContextProvider } from './features/admin/adminContextProvider'
 
 
 function App() {
@@ -13,11 +14,12 @@ function App() {
 
 
       <SongContextProvider>
-      <DashboardContextProvider>
+        <DashboardContextProvider>
 
-        <Approutes />
-
-      </DashboardContextProvider>
+          <AdminContextProvider>
+            <Approutes />
+          </AdminContextProvider>
+        </DashboardContextProvider>
       </SongContextProvider>
 
     </AuthContextProvider>

@@ -1,16 +1,22 @@
-let express = require("express")
+const express = require("express")
 const authMiddleware = require("../middleware/auth.middleware")
-let adminMiddlware = require("../middleware/admin.middleware")
-let songController = require("../controller/song.controller")
+const adminMiddleware = require("../middleware/admin.middleware")
+const songController = require("../controller/song.controller")
 
 const router = express.Router()
 
-
 router.patch(
   "/:songId/status",
-   authMiddleware.authUser,
-  adminMiddlware.isAdmin,
+  authMiddleware.authUser,
+  adminMiddleware.isAdmin,
   songController.updateSongStatus
+)
+
+router.get(
+  "/pending",
+  authMiddleware.authUser,
+  adminMiddleware.isAdmin,
+  songController.getPendingSongs
 )
 
 module.exports = router
