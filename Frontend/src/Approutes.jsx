@@ -6,6 +6,7 @@ import Register from './features/auth/pages/Register'
 import Procteted from './features/auth/components/Procteted'
 import Home from './features/home/pages/Home'
 import Mood from './features/home/pages/Mood'
+import Dashboard from './features/dashboard/pages/Dashboard'
 function Approutes() {
   return (
     // routes
@@ -15,10 +16,13 @@ function Approutes() {
    <Route path="/login" element={<Login />} />
    <Route path="/register" element={<Register />} />
    <Route path="/face" element={<Mood />} />
+   <Route path="/userdashboard" element={<Dashboard />} />
+  
 
 
 </Routes>
    </BrowserRouter>
+
   )
 }
 

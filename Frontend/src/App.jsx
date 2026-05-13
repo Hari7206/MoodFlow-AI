@@ -3,18 +3,21 @@ import FaceExpression from './features/expression/components/FaceExpression'
 import { AuthContextProvider } from './features/auth/AuthContextProvider'
 import Approutes from './approutes'
 import { SongContextProvider } from './features/home/SongContext'
+import { DashboardContextProvider } from './features/dashboard/DashboardContext'
 
 
 function App() {
 
   return (
-
     <AuthContextProvider>
 
+
       <SongContextProvider>
+      <DashboardContextProvider>
 
         <Approutes />
 
+      </DashboardContextProvider>
       </SongContextProvider>
 
     </AuthContextProvider>
