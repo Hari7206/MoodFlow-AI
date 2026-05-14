@@ -8,6 +8,7 @@ import Home from './features/home/pages/Home'
 import Mood from './features/home/pages/Mood'
 import Dashboard from './features/dashboard/pages/Dashboard'
 import Admin from './features/admin/pages/Admin'
+import PostSong from './features/songs/page/PostSong'
 function Approutes() {
   return (
     // routes
@@ -19,6 +20,7 @@ function Approutes() {
    <Route path="/face" element={<Mood />} />
    <Route path="/userDashboard" element={<Dashboard />} />
    <Route path="/admin" element={<Admin />} />
+   <Route path="/uploadSong" element={<PostSong />} />
 </Routes>
    </BrowserRouter>
 

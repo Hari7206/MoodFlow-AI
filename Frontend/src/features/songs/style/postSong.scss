@@ -1,0 +1,71 @@
+.post-song {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  padding: 20px;
+
+  &__form {
+    width: 100%;
+    max-width: 450px;
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: white;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 28px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  label {
+    font-size: 15px;
+    color: #cfcfcf;
+  }
+
+  input,
+  select {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #2a2a2a;
+    color: white;
+    outline: none;
+  }
+
+  button {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #ffffff;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+  }
+
+  .success {
+    color: #4ade80;
+    text-align: center;
+  }
+
+  .error {
+    color: #f87171;
+    text-align: center;
+  }
+}
