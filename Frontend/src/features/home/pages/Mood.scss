@@ -1,0 +1,220 @@
+/* ── Mood.scss ─────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600&display=swap");
+
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  --red:        #cc0000;
+  --red-bright: #ff2200;
+  --orange:     #ff6600;
+  --orange-lt:  #ff8c00;
+
+  --bg:         #060606;
+  --bg-2:       #0f0f0f;
+  --bg-3:       #161616;
+  --bg-4:       #1c1c1c;
+
+  --border:     rgba(255,255,255,0.05);
+  --text:       #efefef;
+  --text-dim:   rgba(239,239,239,0.45);
+  --text-muted: rgba(239,239,239,0.2);
+
+  --f-display: "Bebas Neue", "Impact", sans-serif;
+  --f-body:    "Barlow Condensed", "Helvetica Neue", sans-serif;
+
+  --glow-r: rgba(204,0,0,0.45);
+  --glow-o: rgba(255,102,0,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Page shell ─────────────────────────────────────────────── */
+.mood-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Atmospheric blobs ─────────────────────────────────────── */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  z-index: 0;
+
+  &--a {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(180,0,0,.28) 0%, transparent 70%);
+    top: -160px; left: -120px;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  &--b {
+    width: 440px; height: 440px;
+    background: radial-gradient(circle, rgba(255,60,0,.18) 0%, transparent 70%);
+    bottom: -100px; right: 5%;
+    animation: drift 16s ease-in-out 5s infinite alternate-reverse;
+  }
+}
+
+@keyframes drift {
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(40px,-50px) scale(1.07); }
+  100% { transform: translate(-20px,30px) scale(.94); }
+}
+
+/* ─── CRT scanlines ─────────────────────────────────────────── */
+.scanlines {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px
+  );
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.mp-header {
+  position: relative; z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 1.8rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(6,6,6,.8);
+  backdrop-filter: blur(12px);
+
+  &__brand {
+    display: flex; align-items: center; gap: .5rem;
+  }
+  &__icon {
+    font-size: 1.1rem;
+    color: var(--red);
+    filter: drop-shadow(0 0 6px var(--red));
+    animation: icon-pulse 3s ease-in-out infinite;
+  }
+  &__logo {
+    font-family: var(--f-display);
+    font-size: 1.55rem;
+    letter-spacing: .2em;
+    color: var(--text);
+    text-shadow: 0 0 18px rgba(204,0,0,.25);
+  }
+  &__sub {
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+}
+
+@keyframes icon-pulse {
+  0%,100% { filter: drop-shadow(0 0 5px rgba(204,0,0,.9)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(204,0,0,.4)); }
+}
+
+/* ─── Scanner strip (TOP) ────────────────────────────────────── */
+.mp-scanner {
+  position: relative; z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1rem .5rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,10,.6);
+  backdrop-filter: blur(8px);
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-family: var(--f-body);
+    font-size: .6rem;
+    letter-spacing: .28em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  &__body {
+    width: 100%;
+    max-width: 860px;
+  }
+}
+
+/* Live blink dot */
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+  animation: blink 1.8s step-start infinite;
+  flex-shrink: 0;
+}
+@keyframes blink {
+  0%,49% { opacity: 1; }
+  50%,100% { opacity: .15; }
+}
+
+/* ─── Player stage (BOTTOM) ─────────────────────────────────── */
+.mp-stage {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  min-height: 0;
+}
+
+/* ─── Idle empty state ──────────────────────────────────────── */
+.mp-idle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  position: relative;
+
+  &__ring {
+    position: absolute;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 1px dashed rgba(204,0,0,.18);
+    animation: spin-slow 20s linear infinite;
+  }
+
+  &__icon {
+    font-size: 3rem;
+    color: var(--red);
+    opacity: .3;
+    filter: drop-shadow(0 0 12px var(--red));
+    animation: float 4s ease-in-out infinite;
+    position: relative;
+  }
+
+  &__text {
+    font-family: var(--f-body);
+    font-size: .82rem;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.8;
+    position: relative;
+  }
+}
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}

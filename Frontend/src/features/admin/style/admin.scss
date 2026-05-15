@@ -1,90 +1,90 @@
-.admin {
-  min-height: 100vh;
-  background: #0b0b0b;
-  color: #fff;
-  padding: 20px;
-}
+// .admin {
+//   min-height: 100vh;
+//   background: #0b0b0b;
+//   color: #fff;
+//   padding: 20px;
+// }
 
-.admin__title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
+// .admin__title {
+//   font-size: 24px;
+//   margin-bottom: 20px;
+// }
 
-.admin__loading {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: #0b0b0b;
-}
+// .admin__loading {
+//   min-height: 100vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: #fff;
+//   background: #0b0b0b;
+// }
 
-.admin__empty {
-  color: #aaa;
-}
+// .admin__empty {
+//   color: #aaa;
+// }
 
-.admin__list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+// .admin__list {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 15px;
+// }
 
-.admin__card {
-  display: flex;
-  gap: 15px;
-  background: #161616;
-  padding: 12px;
-  border-radius: 10px;
-  align-items: center;
-}
+// .admin__card {
+//   display: flex;
+//   gap: 15px;
+//   background: #161616;
+//   padding: 12px;
+//   border-radius: 10px;
+//   align-items: center;
+// }
 
-.admin__img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 8px;
-}
+// .admin__img {
+//   width: 70px;
+//   height: 70px;
+//   object-fit: cover;
+//   border-radius: 8px;
+// }
 
-.admin__info {
-  flex: 1;
-}
+// .admin__info {
+//   flex: 1;
+// }
 
-.admin__songTitle {
-  margin: 0;
-  font-size: 16px;
-}
+// .admin__songTitle {
+//   margin: 0;
+//   font-size: 16px;
+// }
 
-.admin__mood {
-  color: #aaa;
-  font-size: 13px;
-}
+// .admin__mood {
+//   color: #aaa;
+//   font-size: 13px;
+// }
 
-.admin__status {
-  font-size: 12px;
-  color: #888;
-  margin-top: 3px;
-}
+// .admin__status {
+//   font-size: 12px;
+//   color: #888;
+//   margin-top: 3px;
+// }
 
-.admin__buttons {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
+// .admin__buttons {
+//   margin-top: 10px;
+//   display: flex;
+//   gap: 10px;
+// }
 
-.admin__approve {
-  background: green;
-  border: none;
-  padding: 6px 12px;
-  color: white;
-  cursor: pointer;
-  border-radius: 6px;
-}
+// .admin__approve {
+//   background: green;
+//   border: none;
+//   padding: 6px 12px;
+//   color: white;
+//   cursor: pointer;
+//   border-radius: 6px;
+// }
 
-.admin__reject {
-  background: red;
-  border: none;
-  padding: 6px 12px;
-  color: white;
-  cursor: pointer;
-  border-radius: 6px;
-}
+// .admin__reject {
+//   background: red;
+//   border: none;
+//   padding: 6px 12px;
+//   color: white;
+//   cursor: pointer;
+//   border-radius: 6px;
+// }

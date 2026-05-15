@@ -1,0 +1,288 @@
+/* ─── FaceExpression.scss ────────────────────────────────────────────────── */
+
+.face-expression {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 2rem 1rem 1.5rem;
+
+  /* ── Orb shell ── */
+  &__orb {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Spinning decorative rings */
+  &__ring {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+
+    &--outer {
+      inset: -14px;
+      border: 1px solid rgba(204, 0, 0, 0.25);
+      animation: fe-spin 12s linear infinite;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        rgba(204, 0, 0, 0.15) 20%,
+        transparent 40%
+      );
+    }
+
+    &--inner {
+      inset: -5px;
+      border: 1px solid rgba(255, 102, 0, 0.18);
+      animation: fe-spin 8s linear infinite reverse;
+    }
+  }
+
+  /* ── Camera window ── */
+  &__camera {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--fe-red, #cc0000);
+    box-shadow:
+      0 0 0 1px rgba(204, 0, 0, 0.12),
+      0 0 24px rgba(204, 0, 0, 0.45),
+      0 0 64px rgba(204, 0, 0, 0.18),
+      inset 0 0 24px rgba(0, 0, 0, 0.6);
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror */
+    filter: saturate(0.75) contrast(1.05);
+  }
+
+  /* ── Countdown overlay ── */
+  &__countdown {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(3px);
+    z-index: 10;
+    animation: fe-fade-in 0.15s ease;
+  }
+
+  &__countdown-num {
+    font-family: var(--fe-font-display, "Bebas Neue", "Impact", sans-serif);
+    font-size: 7rem;
+    line-height: 1;
+    color: var(--fe-orange, #ff6600);
+    text-shadow:
+      0 0 20px var(--fe-orange, #ff6600),
+      0 0 60px rgba(255, 102, 0, 0.5);
+    animation: fe-count-pop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: inline-block;
+  }
+
+  /* ── Scan animation ── */
+  &__scanning {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: rgba(180, 0, 0, 0.06);
+    overflow: hidden;
+  }
+
+  &__scanline {
+    position: absolute;
+    top: -4px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(204, 0, 0, 0.5) 30%,
+      #ff1a1a 50%,
+      rgba(204, 0, 0, 0.5) 70%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(255, 26, 26, 0.9), 0 0 25px rgba(204, 0, 0, 0.4);
+    animation: fe-scan 1.4s ease-in-out infinite;
+  }
+
+  &__scan-label {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--fe-font-body, "Barlow Condensed", sans-serif);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(255, 80, 0, 0.8);
+    animation: fe-blink 1s step-start infinite;
+  }
+
+  /* ── Corner brackets ── */
+  &__bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background: var(--fe-orange, #ff6600);
+    }
+
+    &::before { width: 2px; height: 100%; }
+    &::after  { width: 100%; height: 2px; }
+
+    &--tl { top: -16px; left: -16px;
+      &::before { top: 0; left: 0; }
+      &::after  { top: 0; left: 0; }
+    }
+    &--tr { top: -16px; right: -16px;
+      &::before { top: 0; right: 0; }
+      &::after  { top: 0; right: 0; }
+    }
+    &--bl { bottom: -16px; left: -16px;
+      &::before { bottom: 0; left: 0; }
+      &::after  { bottom: 0; left: 0; }
+    }
+    &--br { bottom: -16px; right: -16px;
+      &::before { bottom: 0; right: 0; }
+      &::after  { bottom: 0; right: 0; }
+    }
+  }
+
+  /* ── Status area ── */
+  &__status {
+    min-height: 52px;
+    text-align: center;
+  }
+
+  &__hint {
+    font-family: var(--fe-font-body, "Barlow Condensed", sans-serif);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0;
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    animation: fe-fade-in 0.4s ease;
+  }
+
+  &__result-label {
+    font-family: var(--fe-font-body, "Barlow Condensed", sans-serif);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(204, 0, 0, 0.9);
+    text-transform: uppercase;
+  }
+
+  &__result-value {
+    font-family: var(--fe-font-display, "Bebas Neue", "Impact", sans-serif);
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: var(--fe-orange, #ff6600);
+    text-shadow:
+      0 0 16px rgba(255, 102, 0, 0.7),
+      0 0 40px rgba(255, 102, 0, 0.25);
+    text-transform: uppercase;
+  }
+
+  /* ── CTA Button ── */
+  &__btn {
+    position: relative;
+    padding: 0.8rem 2.8rem;
+    background: transparent;
+    border: 1px solid rgba(204, 0, 0, 0.7);
+    border-radius: 2px;
+    color: rgba(240, 240, 240, 0.9);
+    font-family: var(--fe-font-body, "Barlow Condensed", sans-serif);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+
+    &-glow {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(204, 0, 0, 0.12) 0%,
+        rgba(255, 102, 0, 0.08) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    &-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--fe-orange, #ff6600);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(204, 0, 0, 0.35), 0 0 40px rgba(255, 102, 0, 0.12);
+
+      .face-expression__btn-glow { opacity: 1; }
+    }
+
+    &--active {
+      border-color: rgba(255, 102, 0, 0.6);
+      color: var(--fe-orange, #ff6600);
+      animation: fe-pulse 2s ease-in-out infinite;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────────────────── */
+@keyframes fe-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fe-count-pop {
+  0%   { transform: scale(1.8); opacity: 0; }
+  40%  { transform: scale(0.95); opacity: 1; }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes fe-scan {
+  0%   { top: -4px; }
+  100% { top: calc(100% + 4px); }
+}
+
+@keyframes fe-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes fe-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fe-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 102, 0, 0.2); }
+  50%       { box-shadow: 0 0 22px rgba(255, 102, 0, 0.5); }
+}

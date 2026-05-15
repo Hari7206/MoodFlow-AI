@@ -6,6 +6,7 @@ const LINKS = [
   { label: 'Home',      path: '/'              },
   { label: 'Listen',    path: '/face'          },
   { label: 'Upload',    path: '/uploadSong'    },
+  { label: 'about', path: '/About' },
   { label: 'Dashboard', path: '/userDashboard' },
 ]
 

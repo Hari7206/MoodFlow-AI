@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './about.css'
+import Nav from "../components/Nav"
 
 export default function About() {
   return (
@@ -8,6 +9,7 @@ export default function About() {
       <div className="spotlight" />
       <div className="spotlight-2" />
       <div className="noise" />
+      <Nav/>
 
       <section className="ab-hero">
         <div className="ab-hero__left">
