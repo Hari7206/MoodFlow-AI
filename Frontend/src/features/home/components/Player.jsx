@@ -2,6 +2,77 @@ import React, { useRef, useState, useEffect } from "react"
 import { useSong } from "../Hooks/useSong"
 
 /* ─────────────────────────────────────────────────────────────────
+   SVG ICONS
+───────────────────────────────────────────────────────────────── */
+const SkipBackLg = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+    <path d="M3 3v5h5"/>
+    <text x="9.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">10</text>
+  </svg>
+)
+
+const SkipBackSm = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+    <path d="M3 3v5h5"/>
+    <text x="9.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">5</text>
+  </svg>
+)
+
+const SkipFwdSm = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+    <path d="M21 3v5h-5"/>
+    <text x="14.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">5</text>
+  </svg>
+)
+
+const SkipFwdLg = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+    <path d="M21 3v5h-5"/>
+    <text x="14.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">10</text>
+  </svg>
+)
+
+const PlayIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="6,3 20,12 6,21"/>
+  </svg>
+)
+
+const PauseIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+    <rect x="5" y="3" width="4" height="18" rx="1"/>
+    <rect x="15" y="3" width="4" height="18" rx="1"/>
+  </svg>
+)
+
+const VolumeHigh = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg>
+)
+
+const VolumeLow = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+  </svg>
+)
+
+const VolumeMute = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/>
+    <line x1="23" y1="9" x2="17" y2="15"/>
+    <line x1="17" y1="9" x2="23" y2="15"/>
+  </svg>
+)
+
+/* ─────────────────────────────────────────────────────────────────
    STYLES
 ───────────────────────────────────────────────────────────────── */
 const css = `
@@ -43,6 +114,8 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   overflow: hidden;
+  padding: 16px;
+  gap: 16px;
 }
 
 /* ── LEFT — MAIN PLAYER ── */
@@ -75,6 +148,9 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
 .mp__art-frame {
   position: relative;
   width: 280px; height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* spinning outline ring */
@@ -99,29 +175,50 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
 .mp__ring::before { top: -4px; left: calc(50% - 4px); }
 .mp__ring::after  { bottom: -4px; right: calc(50% - 4px); }
 
+/* ── CIRCULAR SPINNING COVER ── */
 .mp__cover {
   width: 280px; height: 280px;
-  border-radius: 20px;
+  border-radius: 50%;
   object-fit: cover;
   display: block;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
-  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,0.04),
+    0 0 0 12px rgba(255,75,43,0.08),
+    0 32px 80px rgba(0,0,0,0.7);
+  animation: spinCover 12s linear infinite;
+  animation-play-state: paused;
 }
-.mp__cover:hover { transform: scale(1.025) rotate(-1deg); }
+.mp__cover.spinning { animation-play-state: running; }
+
+@keyframes spinCover {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 .mp__cover-placeholder {
   width: 280px; height: 280px;
-  border-radius: 20px;
+  border-radius: 50%;
   background: var(--surface);
   display: grid; place-items: center;
   font-size: 4rem;
   box-shadow: 0 32px 80px rgba(0,0,0,0.5);
 }
 
+/* centre vinyl hole */
+.mp__vinyl-hole {
+  position: absolute;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid rgba(255,75,43,0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* playing badge */
 .mp__playing-badge {
   position: absolute;
-  bottom: -14px; left: 50%;
+  bottom: -20px; left: 50%;
   transform: translateX(-50%);
   background: var(--grad);
   font-size: 10px;
@@ -230,8 +327,8 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
 .mp__vol-icon {
   width: 32px;
   background: none; border: none; color: var(--muted);
-  font-size: 16px; transition: color 0.2s; flex-shrink: 0;
-  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s; flex-shrink: 0;
 }
 .mp__vol-icon:hover { color: var(--text); }
 .mp__vol-slider { flex: 1; }
@@ -244,7 +341,6 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
   width: 46px; height: 46px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
   transition: background 0.2s, transform 0.15s, border-color 0.2s;
 }
 .ic-btn:hover { background: var(--lift); transform: scale(1.1); border-color: rgba(255,255,255,0.15); }
@@ -253,23 +349,23 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
   background: #fff;
   color: #0c0c0f;
   border: none;
-  font-size: 22px;
   box-shadow: 0 8px 32px rgba(255,75,43,0.35);
 }
 .ic-btn.ic-btn--main:hover { background: #f0ede8; transform: scale(1.08); }
-.ic-btn.ic-btn--sm { width: 38px; height: 38px; font-size: 14px; }
+.ic-btn.ic-btn--sm { width: 40px; height: 40px; }
 
 /* ── RIGHT — PLAYLIST ── */
 .pl {
   background: var(--panel);
-  border-left: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 .pl__header {
-  padding: 28px 24px 16px;
+  padding: 24px 24px 14px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -286,81 +382,11 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
   text-transform: uppercase;
 }
 
-/* playlist mini player */
-.pl__mini {
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
-  position: relative;
-}
-.pl__mini-prog {
-  position: absolute;
-  top: 0; left: 0;
-  height: 2px;
-  background: var(--grad);
-  transition: width 0.1s linear;
-  border-radius: 0 2px 2px 0;
-}
-.pl__mini-bar {
-  width: 100%;
-  height: 3px;
-  background: var(--lift);
-  border-radius: 2px;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-.pl__mini-bar-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: var(--grad);
-  transition: width 0.1s linear;
-}
-.pl__mini-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.pl__mini-img {
-  width: 44px; height: 44px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.pl__mini-img-ph {
-  width: 44px; height: 44px;
-  border-radius: 8px;
-  background: var(--lift);
-  display: grid; place-items: center;
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-.pl__mini-info { flex: 1; min-width: 0; }
-.pl__mini-song {
-  font-size: 13px; font-weight: 500;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.pl__mini-mood { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.pl__mini-ctrls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.pl__mini-times {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 4px;
-  letter-spacing: 0.3px;
-}
-
 /* list */
 .pl__list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 12px;
+  padding: 10px 12px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,75,43,0.25) transparent;
 }
@@ -391,19 +417,26 @@ input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
 .pl__item.active { background: rgba(255,75,43,0.1); }
 .pl__item.active::before { transform: scaleY(1); }
 
+/* ── CIRCULAR thumbnail in playlist ── */
 .pl__item-img {
   width: 48px; height: 48px;
-  border-radius: 10px;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
   display: block;
+  animation: spinCover 8s linear infinite;
+  animation-play-state: paused;
+  box-shadow: 0 0 0 2px rgba(255,75,43,0.12);
+}
+.pl__item-img.spinning {
+  animation-play-state: running;
 }
 .pl__item-img-ph {
   width: 48px; height: 48px;
-  border-radius: 10px;
+  border-radius: 50%;
   background: var(--lift);
   display: grid; place-items: center;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   flex-shrink: 0;
 }
 .pl__item-info { flex: 1; min-width: 0; }
@@ -479,24 +512,14 @@ const Player = () => {
     setSong,
   } = useSong()
 
-  // ── MAIN PLAYER refs/state
-  const mainAudio = useRef(null)
+  const mainAudio  = useRef(null)
   const mainBarRef = useRef(null)
   const [mainTime, setMainTime] = useState(0)
-  const [mainDur, setMainDur]   = useState(0)
-  const [mainVol, setMainVol]   = useState(1)
+  const [mainDur,  setMainDur]  = useState(0)
+  const [mainVol,  setMainVol]  = useState(1)
   const [mainMuted, setMainMuted] = useState(false)
 
-  // ── PLAYLIST PLAYER refs/state
-  const plAudio    = useRef(null)
-  const plBarRef   = useRef(null)
-  const [plSong, setPlSong]       = useState(null)
-  const [plPlaying, setPlPlaying] = useState(false)
-  const [plTime, setPlTime]       = useState(0)
-  const [plDur, setPlDur]         = useState(0)
-  const [plVol, setPlVol]         = useState(1)
-
-  // ── Load main song
+  /* ── Load / reset on song change */
   useEffect(() => {
     if (!song?.url) return
     const a = mainAudio.current
@@ -507,17 +530,7 @@ const Player = () => {
     if (song?.mood) handleGetPlaylist(song.mood)
   }, [song])
 
-  // ── Load playlist song
-  useEffect(() => {
-    if (!plSong?.url) return
-    const a = plAudio.current
-    if (!a) return
-    a.load()
-    setPlTime(0)
-    setPlPlaying(false)
-  }, [plSong])
-
-  // ── Main controls
+  /* ── Playback controls */
   const mainToggle = async () => {
     const a = mainAudio.current
     if (!a) return
@@ -527,38 +540,24 @@ const Player = () => {
       if (song?._id) handleAddRecent(song._id)
     }
   }
+
   const mainSkip = (s) => {
     const a = mainAudio.current; if (!a) return
     a.currentTime = Math.min(Math.max(a.currentTime + s, 0), mainDur)
   }
+
   const mainProgressClick = (e) => {
     const a = mainAudio.current, bar = mainBarRef.current; if (!a || !bar) return
     const r = bar.getBoundingClientRect()
     a.currentTime = ((e.clientX - r.left) / r.width) * mainDur
   }
 
-  // ── Playlist controls
-  const plToggle = async () => {
-    const a = plAudio.current; if (!a || !plSong) return
-    if (plPlaying) { a.pause(); setPlPlaying(false) }
-    else { await a.play(); setPlPlaying(true) }
-  }
-  const plSkip = (s) => {
-    const a = plAudio.current; if (!a) return
-    a.currentTime = Math.min(Math.max(a.currentTime + s, 0), plDur)
-  }
-  const plProgressClick = (e) => {
-    const a = plAudio.current, bar = plBarRef.current; if (!a || !bar) return
-    const r = bar.getBoundingClientRect()
-    a.currentTime = ((e.clientX - r.left) / r.width) * plDur
-  }
+  /* ── Click playlist item → load into main player */
   const selectPlaylistSong = (item) => {
-    setPlSong(item)
-    setPlTime(0); setPlPlaying(false)
+    setSong(item)
   }
 
   const mainProg = mainDur ? (mainTime / mainDur) * 100 : 0
-  const plProg   = plDur   ? (plTime  / plDur)   * 100 : 0
 
   if (!song) return null
 
@@ -566,40 +565,39 @@ const Player = () => {
     <>
       <style>{css}</style>
 
-      {/* Hidden audio elements */}
       <audio
         ref={mainAudio}
         src={song?.url}
         onTimeUpdate={() => setMainTime(mainAudio.current?.currentTime || 0)}
         onLoadedMetadata={() => setMainDur(mainAudio.current?.duration || 0)}
       />
-      {plSong?.url && (
-        <audio
-          ref={plAudio}
-          src={plSong.url}
-          onTimeUpdate={() => setPlTime(plAudio.current?.currentTime || 0)}
-          onLoadedMetadata={() => setPlDur(plAudio.current?.duration || 0)}
-        />
-      )}
 
       <div className="ma">
 
-        {/* ══════════════════ LEFT — MAIN PLAYER ══════════════════ */}
+        {/* ══════════ LEFT — MAIN PLAYER ══════════ */}
         <div className="mp">
 
-          {/* ambient glow */}
           <div className="mp__ambient" style={{
             background: `radial-gradient(ellipse at 50% 30%, rgba(255,75,43,0.12) 0%, transparent 65%)`
           }} />
 
-          {/* Art */}
+          {/* Art — circular spinning cover */}
           <div className="mp__art-zone">
             <div className="mp__art-frame">
               <div className={`mp__ring${isPlaying ? "" : " paused"}`} />
+
               {song.posterUrl
-                ? <img src={song.posterUrl} className="mp__cover" alt={song.title} />
+                ? <img
+                    src={song.posterUrl}
+                    className={`mp__cover${isPlaying ? " spinning" : ""}`}
+                    alt={song.title}
+                  />
                 : <div className="mp__cover-placeholder">🎵</div>
               }
+
+              {/* vinyl centre hole */}
+              <div className="mp__vinyl-hole" />
+
               <div className={`mp__playing-badge${isPlaying ? " visible" : ""}`}>
                 Now Playing
               </div>
@@ -623,22 +621,22 @@ const Player = () => {
             </div>
           </div>
 
-          {/* Controls */}
+          {/* Controls — SVG icon buttons */}
           <div className="mp__controls">
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(-10)} title="Back 10s">
-              ⏪
+              <SkipBackLg />
             </button>
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(-5)} title="Back 5s">
-              ↩
+              <SkipBackSm />
             </button>
             <button className="ic-btn ic-btn--main" onClick={mainToggle}>
-              {isPlaying ? "⏸" : "▶"}
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(5)} title="Fwd 5s">
-              ↪
+              <SkipFwdSm />
             </button>
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(10)} title="Fwd 10s">
-              ⏩
+              <SkipFwdLg />
             </button>
           </div>
 
@@ -649,7 +647,7 @@ const Player = () => {
               if (mainMuted) { a.volume = mainVol; setMainMuted(false) }
               else { a.volume = 0; setMainMuted(true) }
             }}>
-              {mainMuted ? "🔇" : mainVol > 0.5 ? "🔊" : "🔉"}
+              {mainMuted ? <VolumeMute /> : mainVol > 0.5 ? <VolumeHigh /> : <VolumeLow />}
             </button>
             <input
               type="range" min="0" max="1" step="0.02"
@@ -665,7 +663,7 @@ const Player = () => {
           </div>
         </div>
 
-        {/* ══════════════════ RIGHT — PLAYLIST ══════════════════ */}
+        {/* ══════════ RIGHT — PLAYLIST ══════════ */}
         <div className="pl">
 
           <div className="pl__header">
@@ -675,47 +673,11 @@ const Player = () => {
             </div>
           </div>
 
-          {/* Playlist mini-player */}
-          {plSong && (
-            <div className="pl__mini">
-              {/* progress top bar */}
-              <div
-                className="pl__mini-bar"
-                ref={plBarRef}
-                onClick={plProgressClick}
-              >
-                <div className="pl__mini-bar-fill" style={{ width: `${plProg}%` }} />
-              </div>
-              <div className="pl__mini-row">
-                {plSong.posterUrl
-                  ? <img src={plSong.posterUrl} className="pl__mini-img" alt={plSong.title} />
-                  : <div className="pl__mini-img-ph">🎵</div>
-                }
-                <div className="pl__mini-info">
-                  <div className="pl__mini-song">{plSong.title}</div>
-                  <div className="pl__mini-mood">{plSong.mood}</div>
-                </div>
-                <div className="pl__mini-ctrls">
-                  <button className="ic-btn ic-btn--sm" onClick={() => plSkip(-5)}>⏪</button>
-                  <button className="ic-btn" onClick={plToggle} style={{ width: 46, height: 46 }}>
-                    {plPlaying ? "⏸" : "▶"}
-                  </button>
-                  <button className="ic-btn ic-btn--sm" onClick={() => plSkip(5)}>⏩</button>
-                </div>
-              </div>
-              <div className="pl__mini-times">
-                <span>{fmt(plTime)}</span>
-                <span>{fmt(plDur)}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Track list */}
           <div className="pl__list">
             {!playlist?.length
               ? <div className="pl__empty">No tracks found<br />for this mood</div>
               : playlist.map((item, idx) => {
-                  const isActive = plSong?._id === item._id
+                  const isActive = song?._id === item._id
                   return (
                     <div
                       key={item._id}
@@ -723,7 +685,11 @@ const Player = () => {
                       onClick={() => selectPlaylistSong(item)}
                     >
                       {item.posterUrl
-                        ? <img src={item.posterUrl} className="pl__item-img" alt={item.title} />
+                        ? <img
+                            src={item.posterUrl}
+                            className={`pl__item-img${isActive && isPlaying ? " spinning" : ""}`}
+                            alt={item.title}
+                          />
                         : <div className="pl__item-img-ph">🎵</div>
                       }
                       <div className="pl__item-info">
@@ -736,7 +702,7 @@ const Player = () => {
                           {[0,1,2,3].map(i => (
                             <div
                               key={i}
-                              className={`pl__wave-bar${plPlaying ? "" : " paused"}`}
+                              className={`pl__wave-bar${isPlaying ? "" : " paused"}`}
                               style={{ animationDelay: `${i * 0.12}s` }}
                             />
                           ))}
