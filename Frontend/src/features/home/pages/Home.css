@@ -25,7 +25,7 @@ body, .home-root {
   overflow-x: hidden;
 }
 
-/* ═══════════════════ HERO ═══════════════════ */
+
 .h-hero {
   position: relative;
   min-height: 100svh;
@@ -230,7 +230,7 @@ body, .home-root {
   animation: scrollLine 1.8s ease-in-out infinite;
 }
 
-/* ═══════════════════ TEXT + IMAGE BAND ═══════════════════ */
+
 .h-band {
   position: relative;
   display: grid;
@@ -353,7 +353,7 @@ body, .home-root {
   background: rgba(232,57,42,0.06);
 }
 
-/* ═══════════════════ MOODS ═══════════════════ */
+
 .h-section {
   padding: 100px 5vw;
 }
@@ -476,7 +476,7 @@ body, .home-root {
   color: var(--text);
 }
 
-/* ═══════════════════ HOW IT WORKS ═══════════════════ */
+
 .h-how {
   padding: 100px 5vw;
   border-top: 1px solid var(--border);
@@ -547,7 +547,7 @@ body, .home-root {
   line-height: 1.65;
 }
 
-/* ═══════════════════ STATS ═══════════════════ */
+
 .h-stats {
   padding: 80px 5vw;
   border-top: 1px solid var(--border);
@@ -588,7 +588,6 @@ body, .home-root {
   font-weight: 500;
 }
 
-/* ═══════════════════ CONTRIBUTE BAND ═══════════════════ */
 .h-contribute {
   padding: 100px 5vw;
   border-top: 1px solid var(--border);
@@ -675,7 +674,6 @@ body, .home-root {
   line-height: 1.55;
 }
 
-/* ═══════════════════ CTA ═══════════════════ */
 .h-cta {
   position: relative;
   margin: 0 5vw 100px;
@@ -770,7 +768,7 @@ body, .home-root {
   letter-spacing: 0.5px;
 }
 
-/* ═══════════════════ FOOTER ═══════════════════ */
+
 .h-footer {
   border-top: 1px solid var(--border);
   padding: 48px 5vw;
@@ -825,7 +823,7 @@ body, .home-root {
   color: rgba(240,236,230,0.25);
 }
 
-/* ═══════════════════ ANIMATIONS ═══════════════════ */
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -848,7 +846,7 @@ body, .home-root {
   100% { transform: scaleY(0); transform-origin: bottom; }
 }
 
-/* ═══════════════════ RESPONSIVE ═══════════════════ */
+
 @media (max-width: 1024px) {
   .h-moods-grid { grid-template-columns: repeat(2, 1fr); }
   .h-how-grid   { grid-template-columns: repeat(2, 1fr); }

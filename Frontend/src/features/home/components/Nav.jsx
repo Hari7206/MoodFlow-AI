@@ -3,8 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './nav.css'
 
-// index.html → add Font Awesome if missing:
-// <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
 
 const LINKS = [
   { label: 'Home',   path: '/',           icon: 'fa-house'          },
@@ -24,20 +23,17 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  /* scroll listener */
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
-  /* close on route change */
   useEffect(() => {
     setMenuOpen(false)
     setDropOpen(false)
   }, [location.pathname])
 
-  /* close dropdown on outside click */
   useEffect(() => {
     const fn = (e) => {
       if (dropRef.current && !dropRef.current.contains(e.target))
@@ -47,7 +43,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', fn)
   }, [])
 
-  /* fetch current user on mount */
   useEffect(() => {
     axios
       .get('http://localhost:3000/api/auth/get-me', { withCredentials: true })
@@ -61,13 +56,9 @@ export default function Navbar() {
       })
   }, [])
 
-  /* logout — axios POST so server clears the httpOnly cookie */
   const handleLogout = async () => {
     try {
-      await axios.get(
-        'http://localhost:3000/api/auth/logout',
-        { withCredentials: true }    // sends cookie → server deletes it
-      )
+      await axios.get('http://localhost:3000/api/auth/logout', { withCredentials: true })
     } catch (err) {
       console.error('Logout failed:', err)
     } finally {
@@ -84,113 +75,100 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ══════════════════════════════════════════════════
-          NAVBAR  —  LEFT | CENTER | RIGHT
-      ══════════════════════════════════════════════════ */}
-      <header className="nb">
-        <div className={`nb__bar${scrolled ? ' nb__bar--glow' : ''}`}>
+      <header className={`nb${scrolled ? ' nb--scrolled' : ''}`}>
+        {/* LEFT: Logo */}
+        <div className="nb__left">
+          <Link to="/" className="nb__logo">
+            <span className="nb__logo-text">
+              Mood<em>Flow</em>
+            </span>
+          </Link>
+        </div>
 
-          {/* ── LEFT: Logo ─────────────────────────────── */}
-          <div className="nb__left">
-            <Link to="/" className="nb__logo">
-           
-              <span className="nb__logo-text">
-                Mood<em>Flow</em>
-              </span>
-            </Link>
-          </div>
-
-          {/* ── CENTER: Links ───────────────────────────── */}
-          <div className="nb__center">
-            <ul className="nb__links">
-              {LINKS.map((l) => {
-                const active = location.pathname === l.path
-                return (
-                  <li key={l.path}>
-                    <Link
-                      to={l.path}
-                      className={`nb__link${active ? ' nb__link--on' : ''}`}
-                    >
-                      <i className={`fa-solid ${l.icon}`} />
-                      {l.label}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-
-          {/* ── RIGHT: Auth ─────────────────────────────── */}
-          <div className="nb__right">
-            {!authReady ? (
-              /* loading pulse */
-              <div className="nb__skel" />
-            ) : user ? (
-              /* avatar + dropdown */
-              <div className="nb__av-wrap" ref={dropRef}>
-                <button
-                  className={`nb__av${dropOpen ? ' nb__av--open' : ''}`}
-                  onClick={() => setDropOpen((p) => !p)}
-                  aria-label="Account menu"
-                  aria-expanded={dropOpen}
-                >
-                  {user.profilePic ? (
-                    <img src={user.profilePic} alt={user.name} />
-                  ) : (
-                    initials
-                  )}
-                </button>
-
-                <div className={`nb__drop${dropOpen ? ' nb__drop--open' : ''}`}>
-                  <div className="nb__drop-head">
-                    <span className="nb__drop-name">{user.name}</span>
-                    <span className="nb__drop-email">{user.email}</span>
-                  </div>
-
+        {/* CENTER: Nav links */}
+        <nav className="nb__center">
+          <ul className="nb__links">
+            {LINKS.map((l) => {
+              const active = location.pathname === l.path
+              return (
+                <li key={l.path}>
                   <Link
-                    to="/userDashboard"
-                    className="nb__drop-item"
-                    onClick={() => setDropOpen(false)}
+                    to={l.path}
+                    className={`nb__link${active ? ' nb__link--on' : ''}`}
                   >
-                    <i className="fa-solid fa-circle-user" />
-                    My Profile
+                    <i className={`fa-solid ${l.icon}`} />
+                    {l.label}
                   </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
-                  <div className="nb__drop-sep" />
+        {/* RIGHT: Auth */}
+        <div className="nb__right">
+          {!authReady ? (
+            <div className="nb__skel" />
+          ) : user ? (
+            <div className="nb__av-wrap" ref={dropRef}>
+              <button
+                className={`nb__av${dropOpen ? ' nb__av--open' : ''}`}
+                onClick={() => setDropOpen((p) => !p)}
+                aria-label="Account menu"
+                aria-expanded={dropOpen}
+              >
+                {user.profilePic ? (
+                  <img src={user.profilePic} alt={user.name} />
+                ) : (
+                  initials
+                )}
+              </button>
 
-                  <button
-                    className="nb__drop-item nb__drop-item--red"
-                    onClick={handleLogout}
-                  >
-                    <i className="fa-solid fa-arrow-right-from-bracket" />
-                    Log Out
-                  </button>
+              <div className={`nb__drop${dropOpen ? ' nb__drop--open' : ''}`}>
+                <div className="nb__drop-head">
+                  <span className="nb__drop-name">{user.name}</span>
+                  <span className="nb__drop-email">{user.email}</span>
                 </div>
+
+                <Link
+                  to="/userDashboard"
+                  className="nb__drop-item"
+                  onClick={() => setDropOpen(false)}
+                >
+                  <i className="fa-solid fa-circle-user" />
+                  My Profile
+                </Link>
+
+                <div className="nb__drop-sep" />
+
+                <button
+                  className="nb__drop-item nb__drop-item--red"
+                  onClick={handleLogout}
+                >
+                  <i className="fa-solid fa-arrow-right-from-bracket" />
+                  Log Out
+                </button>
               </div>
-            ) : (
-              /* guest */
-              <Link to="/register" className="nb__cta">
-                <i className="fa-solid fa-bolt" />
-                Get Started
-              </Link>
-            )}
+            </div>
+          ) : (
+            <Link to="/register" className="nb__cta">
+              <i className="fa-solid fa-bolt" />
+              Get Started
+            </Link>
+          )}
 
-            {/* burger — shown via CSS on mobile */}
-            <button
-              className={`nb__burger${menuOpen ? ' nb__burger--open' : ''}`}
-              onClick={() => setMenuOpen((p) => !p)}
-              aria-label="Toggle menu"
-            >
-              <span /><span /><span />
-            </button>
-          </div>
-
+          {/* burger — mobile only */}
+          <button
+            className={`nb__burger${menuOpen ? ' nb__burger--open' : ''}`}
+            onClick={() => setMenuOpen((p) => !p)}
+            aria-label="Toggle menu"
+          >
+            <span /><span /><span />
+          </button>
         </div>
       </header>
 
-      {/* ══════════════════════════════════════════════════
-          MOBILE DRAWER
-      ══════════════════════════════════════════════════ */}
+      {/* MOBILE DRAWER */}
       <div
         className={`nb__drawer${menuOpen ? ' nb__drawer--open' : ''}`}
         aria-hidden={!menuOpen}
@@ -216,10 +194,7 @@ export default function Navbar() {
           {!authReady ? null : user ? (
             <>
               <div className="nb__mob-user">
-                <div
-                  className="nb__av"
-                  style={{ width: 44, height: 44, fontSize: 14, flexShrink: 0 }}
-                >
+                <div className="nb__av" style={{ width: 44, height: 44, fontSize: 14, flexShrink: 0 }}>
                   {user.profilePic ? (
                     <img src={user.profilePic} alt={user.name} />
                   ) : (

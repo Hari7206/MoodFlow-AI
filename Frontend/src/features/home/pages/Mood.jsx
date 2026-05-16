@@ -15,12 +15,11 @@ function Mood() {
 
   return (
     <div className="mood-page">
-    <Nav/>
+      <Nav/>
       <div className="blob blob--a" />
       <div className="blob blob--b" />
       <div className="scanlines" />
 
-  
       <header className="mp-header">
         <div className="mp-header__brand">
           <span className="mp-header__icon">◈</span>
@@ -29,7 +28,6 @@ function Mood() {
         <span className="mp-header__sub">AI mood-based player</span>
       </header>
 
-      {/* ══ TOP STRIP — expression scanner ══ */}
       <section className="mp-scanner">
         <div className="mp-scanner__label">
           <span className="live-dot" />
@@ -40,7 +38,6 @@ function Mood() {
         </div>
       </section>
 
-      {/* ══ BOTTOM — player + playlist ══ */}
       <section className="mp-stage">
         {song ? (
           <Player />

@@ -1,7 +1,5 @@
-/* ── Mood.scss ─────────────────────────────────────────────── */
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600&display=swap");
 
-/* ─── Design tokens ─────────────────────────────────────────── */
 :root {
   --red:        #cc0000;
   --red-bright: #ff2200;
@@ -19,7 +17,7 @@
   --text-muted: rgba(239,239,239,0.2);
 
   --f-display: "Bebas Neue", "Impact", sans-serif;
-  --f-body:    "Barlow Condensed", "Helvetica Neue", sans-serif;
+  --f-body:     "Barlow Condensed", "Helvetica Neue", sans-serif;
 
   --glow-r: rgba(204,0,0,0.45);
   --glow-o: rgba(255,102,0,0.35);
@@ -35,7 +33,6 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── Page shell ─────────────────────────────────────────────── */
 .mood-page {
   position: relative;
   display: flex;
@@ -44,7 +41,6 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* ─── Atmospheric blobs ─────────────────────────────────────── */
 .blob {
   position: fixed;
   border-radius: 50%;
@@ -72,7 +68,6 @@ html, body, #root {
   100% { transform: translate(-20px,30px) scale(.94); }
 }
 
-/* ─── CRT scanlines ─────────────────────────────────────────── */
 .scanlines {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 1;
@@ -83,7 +78,6 @@ html, body, #root {
   );
 }
 
-/* ─── Header ─────────────────────────────────────────────────── */
 .mp-header {
   position: relative; z-index: 2;
   display: flex;
@@ -123,7 +117,6 @@ html, body, #root {
   50%      { filter: drop-shadow(0 0 14px rgba(204,0,0,.4)); }
 }
 
-/* ─── Scanner strip (TOP) ────────────────────────────────────── */
 .mp-scanner {
   position: relative; z-index: 2;
   display: flex;
@@ -151,7 +144,6 @@ html, body, #root {
   }
 }
 
-/* Live blink dot */
 .live-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
@@ -165,7 +157,6 @@ html, body, #root {
   50%,100% { opacity: .15; }
 }
 
-/* ─── Player stage (BOTTOM) ─────────────────────────────────── */
 .mp-stage {
   position: relative; z-index: 2;
   flex: 1;
@@ -174,7 +165,6 @@ html, body, #root {
   min-height: 0;
 }
 
-/* ─── Idle empty state ──────────────────────────────────────── */
 .mp-idle {
   flex: 1;
   display: flex;
