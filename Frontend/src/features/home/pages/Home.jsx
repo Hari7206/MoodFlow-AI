@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from '../components/Nav'   
+import Navbar from "../components/Nav"
 import './Home.css'            
 
 const MOODS = [
@@ -64,7 +64,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar user={user} />
+     <Navbar />
       <div className="home-root">
         <section className="h-hero" ref={heroRef}>
           <div className="h-hero-bg" />
