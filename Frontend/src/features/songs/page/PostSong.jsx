@@ -41,7 +41,7 @@ function PostSong({ user }) {
     <div className="agency-post-page">
       <Navbar user={user} />
 
-      {/* --- HERO SECTION --- */}
+     
       <section className="hero-minimal">
         <div className="hero-text">
           <span className="badge">Sonic Architecture</span>
@@ -76,7 +76,7 @@ function PostSong({ user }) {
         </div>
       </section>
 
-      {/* --- CAPABILITIES --- */}
+  
       <section className="capabilities">
         <div className="cap-header">
            <span className="tag">Engine Specs</span>
@@ -101,11 +101,11 @@ function PostSong({ user }) {
         </div>
       </section>
 
-      {/* --- UPLOAD SECTION (Updated to 2 columns) --- */}
+    
       <section className="upload-section">
         <div className="upload-grid-main">
           
-          {/* Audio Box */}
+       
           <div 
             className={`upload-box ${file ? 'active' : ''}`} 
             onClick={() => fileInputRef.current.click()}
@@ -118,7 +118,7 @@ function PostSong({ user }) {
             </div>
           </div>
 
-          {/* Vibe & Publish Card */}
+       
           <div className="vibe-card-upload">
             <label className="field-label">SELECT VIBE</label>
             

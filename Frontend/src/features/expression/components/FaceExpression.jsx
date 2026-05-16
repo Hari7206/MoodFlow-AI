@@ -9,7 +9,7 @@ export default function FaceExpression({ onClick = () => {} }) {
   const streamRef     = useRef(null);
 
   const [expression, setExpression] = useState(null);
-  const [countdown,  setCountdown]  = useState(null);   // 3 | 2 | 1 | null
+  const [countdown,  setCountdown]  = useState(null);
   const [detecting,  setDetecting]  = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,6 @@ export default function FaceExpression({ onClick = () => {} }) {
     setDetecting(true);
     setExpression(null);
 
-    // 3-2-1 countdown
     for (let i = 3; i >= 1; i--) {
       setCountdown(i);
       await new Promise(res => setTimeout(res, 1000));
@@ -47,7 +46,6 @@ export default function FaceExpression({ onClick = () => {} }) {
 
   return (
     <div className="face-expression">
-      {/* Camera orb */}
       <div className="face-expression__orb">
         <div className="face-expression__ring face-expression__ring--outer" />
         <div className="face-expression__ring face-expression__ring--inner" />
@@ -74,13 +72,11 @@ export default function FaceExpression({ onClick = () => {} }) {
           )}
         </div>
 
-        {/* Corner brackets */}
         {["tl","tr","bl","br"].map(pos => (
           <div key={pos} className={`face-expression__bracket face-expression__bracket--${pos}`} />
         ))}
       </div>
 
-      {/* Result / hint */}
       <div className="face-expression__status">
         {expression ? (
           <div className="face-expression__result">
@@ -96,7 +92,6 @@ export default function FaceExpression({ onClick = () => {} }) {
         )}
       </div>
 
-      {/* CTA button */}
       <button
         className={`face-expression__btn${detecting ? " face-expression__btn--active" : ""}`}
         onClick={handleClick}
