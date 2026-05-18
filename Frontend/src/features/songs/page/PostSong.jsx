@@ -21,8 +21,25 @@ function PostSong({ user }) {
   const dropdownRef = useRef(null);
 
   const handleFileChange = (e) => {
+    // Block new file selection while uploading
+    if (loading) return;
     const selected = e.target.files[0];
     if (selected) setFile(selected);
+  };
+
+  const handleUploadBoxClick = () => {
+    // Block opening file picker while uploading
+    if (loading) return;
+    fileInputRef.current.click();
+  };
+
+  const handlePublish = async () => {
+    await handlePostSong({ file, mood });
+    // Reset UI after upload completes (success or fail handled inside hook)
+    setFile(null);
+    setMood("");
+    // Reset the file input so the same file can be re-selected if needed
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const selectedMoodObj = MOOD_OPTIONS.find(m => m.value === mood);
@@ -41,7 +58,6 @@ function PostSong({ user }) {
     <div className="agency-post-page">
       <Navbar user={user} />
 
-     
       <section className="hero-minimal">
         <div className="hero-text">
           <span className="badge">Sonic Architecture</span>
@@ -59,8 +75,17 @@ function PostSong({ user }) {
           </div>
 
           <div className="bento-card stats">
-            <h2>04</h2>
-            <p>Core resonant states mapped for adaptive playback.</p>
+            <div className="stats-inner">
+              <h2>04</h2>
+              <p>Core resonant states mapped for adaptive playback.</p>
+              <div className="stats-moods">
+                {MOOD_OPTIONS.map(m => (
+                  <span key={m.value} className="mood-tag">
+                    <i className={`fa-solid ${m.icon}`}></i> {m.label}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="bento-card lead-profile">
@@ -72,11 +97,24 @@ function PostSong({ user }) {
               </div>
             </div>
             <p className="quote">"Audio isn't just heard; it dictates the visual atmosphere of the entire interface."</p>
+            <div className="profile-stats-row">
+              <div className="pstat">
+                <strong>128+</strong>
+                <span>Tracks</span>
+              </div>
+              <div className="pstat">
+                <strong>4</strong>
+                <span>Moods</span>
+              </div>
+              <div className="pstat">
+                <strong>∞</strong>
+                <span>Vibes</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-  
       <section className="capabilities">
         <div className="cap-header">
            <span className="tag">Engine Specs</span>
@@ -101,34 +139,55 @@ function PostSong({ user }) {
         </div>
       </section>
 
-    
       <section className="upload-section">
         <div className="upload-grid-main">
           
-       
+          {/* Upload box — locked while uploading */}
           <div 
-            className={`upload-box ${file ? 'active' : ''}`} 
-            onClick={() => fileInputRef.current.click()}
+            className={`upload-box ${file ? 'active' : ''} ${loading ? 'locked' : ''}`} 
+            onClick={handleUploadBoxClick}
           >
-            <input type="file" ref={fileInputRef} onChange={handleFileChange} hidden accept="audio/*" />
-            <i className={`fa-solid ${file ? 'fa-circle-check' : 'fa-plus'}`}></i>
-            <div className="text-meta">
-              <h3>{file ? file.name : "PICK THE SONG"}</h3>
-              <p>MP3, WAV, or FLAC</p>
-            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              hidden
+              accept="audio/*"
+              disabled={loading}
+            />
+            {loading ? (
+              <>
+                <i className="fa-solid fa-spinner fa-spin"></i>
+                <div className="text-meta">
+                  <h3>UPLOADING...</h3>
+                  <p>{file?.name}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <i className={`fa-solid ${file ? 'fa-circle-check' : 'fa-plus'}`}></i>
+                <div className="text-meta">
+                  <h3>{file ? file.name : "PICK THE SONG"}</h3>
+                  <p>MP3, WAV, or FLAC</p>
+                </div>
+              </>
+            )}
           </div>
 
-       
           <div className="vibe-card-upload">
             <label className="field-label">SELECT VIBE</label>
             
-            <div className="custom-dropdown-modern" ref={dropdownRef} onClick={() => setDropdownOpen(!dropdownOpen)}>
+            <div
+              className={`custom-dropdown-modern ${loading ? 'locked' : ''}`}
+              ref={dropdownRef}
+              onClick={() => !loading && setDropdownOpen(!dropdownOpen)}
+            >
               <div className="selected-view">
                 <span>{selectedMoodObj ? selectedMoodObj.label : "Select a mood..."}</span>
                 <i className={`fa-solid fa-chevron-${dropdownOpen ? 'up' : 'down'}`}></i>
               </div>
 
-              {dropdownOpen && (
+              {dropdownOpen && !loading && (
                 <div className="options-panel">
                   {MOOD_OPTIONS.map((m) => (
                     <div 
@@ -151,7 +210,7 @@ function PostSong({ user }) {
             <button 
               className="publish-action-btn" 
               disabled={loading || !file || !mood} 
-              onClick={() => handlePostSong({file, mood})}
+              onClick={handlePublish}
             >
               {loading ? "UPLOADING..." : "PUBLISH PROJECT"}
             </button>
