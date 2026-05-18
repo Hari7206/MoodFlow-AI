@@ -4,14 +4,14 @@ import Navbar from "../components/Nav"
 import './Home.css'            
 
 const MOODS = [
-  { id: 'happy',     emoji: '😄', label: 'Happy',     color: '#f5a623', desc: 'Bright & Uplifting',   bg: 'rgba(245,166,35,0.12)' },
-  { id: 'sad',       emoji: '😢', label: 'Sad',       color: '#5b9bd5', desc: 'Deep & Reflective',    bg: 'rgba(91,155,213,0.12)' },
+  { id: 'happy',     emoji: '😄', label: 'Happy',    color: '#f5a623', desc: 'Bright & Uplifting',   bg: 'rgba(245,166,35,0.12)' },
+  { id: 'sad',       emoji: '😢', label: 'Sad',      color: '#5b9bd5', desc: 'Deep & Reflective',    bg: 'rgba(91,155,213,0.12)' },
   { id: 'surprised', emoji: '😮', label: 'Surprised', color: '#a78bfa', desc: 'Bold & Unexpected',    bg: 'rgba(167,139,250,0.12)' },
   { id: 'angry',     emoji: '😠', label: 'Angry',     color: '#e8392a', desc: 'Intense & Raw',        bg: 'rgba(232,57,42,0.12)' },
 ]
 
 const HOW_STEPS = [
-  { num: '01', title: 'Face Scan',      desc: 'Open your camera and let MoodSync read your expression in real time.', icon: '◉' },
+  { num: '01', title: 'Face Scan',      desc: 'Open your camera and let MoodFlow read your expression in real time.', icon: '◉' },
   { num: '02', title: 'Mood Detected',  desc: 'Our ML model maps your face to one of four emotions instantly.', icon: '◈' },
   { num: '03', title: 'Playlist Ready', desc: 'Songs curated for your mood begin playing immediately.', icon: '♫' },
   { num: '04', title: 'You Choose',     desc: 'Browse the full mood playlist and pick exactly what you want.', icon: '✦' },
@@ -66,12 +66,14 @@ export default function Home() {
     <>
      <Navbar />
       <div className="home-root">
+
         <section className="h-hero" ref={heroRef}>
-          <div className="h-hero-bg" />
-          <div className="h-hero-gif">
-            <div className="h-hero-gif-label">
-              <img src="https://i.pinimg.com/originals/a3/91/0f/a3910f0f9b207e31f32936f0e92f879a.gif" alt="hero animation" />
-            </div>
+          <div className="h-hero-bg">
+            <img
+              src="https://i.pinimg.com/originals/a3/91/0f/a3910f0f9b207e31f32936f0e92f879a.gif"
+              alt=""
+              className="h-hero-bg-img"
+            />
           </div>
           <div className="h-hero-content">
             <div className="h-eyebrow">
@@ -85,7 +87,7 @@ export default function Home() {
             </h1>
             <p className="h-hero-sub">Music that feels what you feel.</p>
             <p className="h-hero-desc">
-              MoodSync reads your facial expression in real time and instantly
+              MoodFlow reads your facial expression in real time and instantly
               curates a playlist that matches your emotion — no buttons, no searching,
               just music that gets you.
             </p>
@@ -93,10 +95,6 @@ export default function Home() {
               <Link to="/face" className="btn-primary">◉ &nbsp;Start Listening</Link>
               <Link to="/uploadSong" className="btn-ghost">↑ &nbsp;Contribute a Song</Link>
             </div>
-          </div>
-          <div className="h-scroll-hint">
-            <div className="h-scroll-line" />
-            scroll
           </div>
         </section>
 
@@ -111,7 +109,7 @@ export default function Home() {
             </div>
           </div>
           <div className="h-band-text">
-            <div className="h-band-label">About MoodSync</div>
+            <div className="h-band-label">About MoodFlow</div>
             <h2 className="h-band-heading">Music intelligence<br />built on emotion.</h2>
             <p className="h-band-body">
               We trained a machine learning model on thousands of facial expressions
@@ -132,8 +130,8 @@ export default function Home() {
               <div className="h-section-label">Mood Engine</div>
               <h2 className="h-section-title">Four moods.<br />Infinite songs.</h2>
               <p className="h-section-sub">
-                MoodSync maps your expression to one of four states and instantly
-                builds a curated playlist just for that feeling.
+                MoodFlow maps your expression to one of four states and instantly
+                build a curated playlist just for that feeling.
               </p>
             </div>
             <Link to="/face" className="btn-primary">Detect My Mood →</Link>
@@ -155,13 +153,16 @@ export default function Home() {
           <div className="h-section-label">The Process</div>
           <h2 className="h-section-title" style={{ marginBottom: 12 }}>How it works</h2>
           <p className="h-section-sub">From face to playlist in under two seconds.</p>
-          <div className="h-how-grid">
+          <div className="h-how-timeline">
             {HOW_STEPS.map((s, i) => (
-              <div key={s.num} className={`h-how-card${howIn ? ' visible' : ''}`} style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className="h-how-num">{s.num}</div>
-                <div className="h-how-icon">{s.icon}</div>
-                <div className="h-how-title">{s.title}</div>
-                <div className="h-how-desc">{s.desc}</div>
+              <div key={s.num} className={`h-how-step${howIn ? ' visible' : ''}`} style={{ animationDelay: `${i * 0.1}s` }}>
+                <div className="h-how-step-top">
+                  <div className="h-how-step-icon">{s.icon}</div>
+                  {i < HOW_STEPS.length - 1 && <div className="h-how-connector" />}
+                </div>
+                <div className="h-how-step-num">{s.num}</div>
+                <div className="h-how-step-title">{s.title}</div>
+                <div className="h-how-step-desc">{s.desc}</div>
               </div>
             ))}
           </div>
@@ -211,39 +212,93 @@ export default function Home() {
 
         <div className="h-cta" ref={ctaRef} style={ctaIn ? { opacity: 1, transform: 'translateY(0)' } : {}}>
           <div className="h-cta-bg" />
-          <div className="h-cta-gif">{/* optional gif */}</div>
+          <div className="h-cta-gif" />
           <div className="h-cta-content">
             <div className="h-cta-tag">Ready?</div>
             <h2 className="h-cta-title">LET YOUR<br />FACE PICK<br />THE SONG</h2>
             <p className="h-cta-desc">
-              Open your camera and let MoodSync do the rest.
+              Open your camera and let MoodFlow do the rest.
               Your next favourite song is one expression away.
             </p>
             <Link to="/face" className="btn-primary" style={{ fontSize: 15, padding: '16px 32px' }}>
               ◉ &nbsp;Launch Mood Scanner
             </Link>
           </div>
-          <div className="h-cta-actions">
-            <Link to="/register" className="btn-ghost">Create Free Account</Link>
-            <Link to="/uploadSong" className="btn-ghost">↑ Contribute Music</Link>
-            <span className="h-cta-note">No credit card · Community powered</span>
+          <div className="h-cta-side">
+            <div className="h-cta-card">
+              <div className="h-cta-card-icon">♫</div>
+              <div className="h-cta-card-title">Contribute Music</div>
+              <p className="h-cta-card-desc">
+                Have a track that perfectly nails a mood? Share it with the community
+                and help others find their sound.
+              </p>
+              <Link to="/uploadSong" className="btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>
+                ↑ Upload a Song
+              </Link>
+            </div>
+            <div className="h-cta-card">
+              <div className="h-cta-card-icon">◈</div>
+              <div className="h-cta-card-title">Explore Playlists</div>
+              <p className="h-cta-card-desc">
+                Browse all four mood playlists — Happy, Sad, Surprised, Angry — and
+                discover new tracks the community loves.
+              </p>
+              <Link to="/face" className="btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>
+                Browse Moods →
+              </Link>
+            </div>
           </div>
         </div>
 
         <footer className="h-footer">
-          <Link to="/" className="h-footer-logo">
-            <div className="h-footer-logo-icon">🎵</div>
-            <span className="h-footer-logo-text">Mood<span>Sync</span></span>
-          </Link>
-          <div className="h-footer-links">
-            <Link to="/">Home</Link>
-            <Link to="/face">Listen</Link>
-            <Link to="/uploadSong">Upload</Link>
-            <Link to="/userDashboard">Dashboard</Link>
-            <Link to="/register">Register</Link>
+          <div className="h-footer-top">
+            <div className="h-footer-brand">
+              <Link to="/" className="h-footer-logo">
+                <div className="h-footer-logo-icon">🎵</div>
+                <span className="h-footer-logo-text">Mood<span>Flow</span></span>
+              </Link>
+              <p className="h-footer-tagline">
+                Music that reads your face.<br />
+                Built with ML, powered by community.
+              </p>
+              <div className="h-footer-socials">
+                <span className="h-footer-social">𝕏</span>
+                <span className="h-footer-social">in</span>
+                <span className="h-footer-social">gh</span>
+              </div>
+            </div>
+            <div className="h-footer-cols">
+              <div className="h-footer-col">
+                <div className="h-footer-col-title">Product</div>
+                <Link to="/face">Mood Scanner</Link>
+                <Link to="/uploadSong">Upload Song</Link>
+                <Link to="/userDashboard">Dashboard</Link>
+              </div>
+              <div className="h-footer-col">
+                <div className="h-footer-col-title">Moods</div>
+                <Link to="/face"> Happy</Link>
+                <Link to="/face"> Sad</Link>
+                <Link to="/face"> Surprised</Link>
+                <Link to="/face"> Angry</Link>
+              </div>
+              <div className="h-footer-col">
+                <div className="h-footer-col-title">Account</div>
+                <Link to="/register">Sign Up</Link>
+                <Link to="/login">Log In</Link>
+                <Link to="/userDashboard">My Uploads</Link>
+              </div>
+            </div>
           </div>
-          <span className="h-footer-copy">© 2025 MoodSync. Built with ML & music.</span>
+          <div className="h-footer-bottom">
+            <span className="h-footer-copy">© 2025 MoodFlow. Built with ML &amp; music.</span>
+            <div className="h-footer-bottom-links">
+              <a href="#">Privacy</a>
+              <a href="#">Terms</a>
+              <a href="#">Contact</a>
+            </div>
+          </div>
         </footer>
+
       </div>
     </>
   )
