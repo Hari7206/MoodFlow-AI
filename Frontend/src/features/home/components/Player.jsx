@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useRef, useState, useEffect, useCallback } from "react"
 import { useSong } from "../Hooks/useSong"
 import "./Player.scss"
 
@@ -7,22 +7,6 @@ const SkipBackLg = () => (
     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
     <path d="M3 3v5h5"/>
     <text x="9.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">10</text>
-  </svg>
-)
-
-const SkipBackSm = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-    <path d="M3 3v5h5"/>
-    <text x="9.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">5</text>
-  </svg>
-)
-
-const SkipFwdSm = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-    <path d="M21 3v5h-5"/>
-    <text x="14.5" y="14.5" fontSize="6.5" fill="currentColor" stroke="none" fontWeight="700" textAnchor="middle">5</text>
   </svg>
 )
 
@@ -70,6 +54,15 @@ const VolumeMute = () => (
   </svg>
 )
 
+const ShuffleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="16 3 21 3 21 8"/>
+    <line x1="4" y1="20" x2="21" y2="3"/>
+    <polyline points="21 16 21 21 16 21"/>
+    <line x1="15" y1="15" x2="21" y2="21"/>
+  </svg>
+)
+
 const fmt = (s) => {
   if (!s || isNaN(s)) return "0:00"
   const m = Math.floor(s / 60)
@@ -88,13 +81,17 @@ const Player = () => {
     setSong,
   } = useSong()
 
-  const mainAudio  = useRef(null)
-  const mainBarRef = useRef(null)
-  const [mainTime, setMainTime] = useState(0)
-  const [mainDur,  setMainDur]  = useState(0)
-  const [mainVol,  setMainVol]  = useState(1)
-  const [mainMuted, setMainMuted] = useState(false)
+  const mainAudio   = useRef(null)
+  const mainBarRef  = useRef(null)
+  const shouldAutoPlay = useRef(false)
 
+  const [mainTime,   setMainTime]   = useState(0)
+  const [mainDur,    setMainDur]    = useState(0)
+  const [mainVol,    setMainVol]    = useState(1)
+  const [mainMuted,  setMainMuted]  = useState(false)
+  const [isShuffled, setIsShuffled] = useState(false)
+
+  
   useEffect(() => {
     if (!song?.url) return
     const a = mainAudio.current
@@ -103,14 +100,25 @@ const Player = () => {
     setMainTime(0)
     setIsPlaying(false)
     if (song?.mood) handleGetPlaylist(song.mood)
+
+    if (shouldAutoPlay.current) {
+      shouldAutoPlay.current = false
+      const playWhenReady = () => {
+        a.play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {})
+        a.removeEventListener("canplay", playWhenReady)
+      }
+      a.addEventListener("canplay", playWhenReady)
+    }
   }, [song])
 
   const mainToggle = async () => {
     const a = mainAudio.current
     if (!a) return
-    if (isPlaying) { 
+    if (isPlaying) {
       a.pause()
-      setIsPlaying(false) 
+      setIsPlaying(false)
     } else {
       await a.play()
       setIsPlaying(true)
@@ -132,6 +140,23 @@ const Player = () => {
     a.currentTime = ((e.clientX - r.left) / r.width) * mainDur
   }
 
+
+  const handleSongEnd = useCallback(() => {
+    if (!playlist?.length) return
+    const currentIndex = playlist.findIndex((item) => item._id === song?._id)
+    let nextIndex
+    if (isShuffled) {
+    
+      do {
+        nextIndex = Math.floor(Math.random() * playlist.length)
+      } while (playlist.length > 1 && nextIndex === currentIndex)
+    } else {
+      nextIndex = (currentIndex + 1) % playlist.length
+    }
+    shouldAutoPlay.current = true
+    setSong(playlist[nextIndex])
+  }, [playlist, song, isShuffled, setSong])
+
   const selectPlaylistSong = (item) => {
     setSong(item)
   }
@@ -147,6 +172,7 @@ const Player = () => {
         src={song?.url}
         onTimeUpdate={() => setMainTime(mainAudio.current?.currentTime || 0)}
         onLoadedMetadata={() => setMainDur(mainAudio.current?.duration || 0)}
+        onEnded={handleSongEnd}
       />
 
       <div className="ma">
@@ -155,6 +181,7 @@ const Player = () => {
             background: `radial-gradient(ellipse at 50% 30%, rgba(255,75,43,0.12) 0%, transparent 65%)`
           }} />
 
+      
           <div className="mp__art-zone">
             <div className="mp__art-frame">
               <div className={`mp__ring${isPlaying ? "" : " paused"}`} />
@@ -192,34 +219,42 @@ const Player = () => {
             </div>
           </div>
 
+ 
           <div className="mp__controls">
+            <button
+              className={`ic-btn ic-btn--sm ic-btn--shuffle${isShuffled ? " active" : ""}`}
+              onClick={() => setIsShuffled((s) => !s)}
+              title="Shuffle"
+            >
+              <ShuffleIcon />
+            </button>
+
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(-10)} title="Back 10s">
               <SkipBackLg />
             </button>
-            <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(-5)} title="Back 5s">
-              <SkipBackSm />
-            </button>
+
             <button className="ic-btn ic-btn--main" onClick={mainToggle}>
               {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
-            <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(5)} title="Fwd 5s">
-              <SkipFwdSm />
-            </button>
+
             <button className="ic-btn ic-btn--sm" onClick={() => mainSkip(10)} title="Fwd 10s">
               <SkipFwdLg />
             </button>
+
+     
+            <div style={{ width: 40 }} />
           </div>
 
           <div className="mp__volume">
             <button className="mp__vol-icon" onClick={() => {
               const a = mainAudio.current
               if (!a) return
-              if (mainMuted) { 
+              if (mainMuted) {
                 a.volume = mainVol
-                setMainMuted(false) 
-              } else { 
+                setMainMuted(false)
+              } else {
                 a.volume = 0
-                setMainMuted(true) 
+                setMainMuted(true)
               }
             }}>
               {mainMuted ? <VolumeMute /> : mainVol > 0.5 ? <VolumeHigh /> : <VolumeLow />}
