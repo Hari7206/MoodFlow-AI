@@ -71,19 +71,6 @@ useEffect(() => {
     }
   }
 
-  const handleLogout = async () => {
-    try {
-      await axios.get('http://localhost:3000/api/auth/logout', { withCredentials: true })
-    } catch (err) {
-      console.error('Logout failed:', err)
-    } finally {
-      setUser(null)
-      setDropOpen(false)
-      setMenuOpen(false)
-      navigate('/login')
-    }
-  }
-
   const initials = user?.name
     ? user.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
     : 'U'
