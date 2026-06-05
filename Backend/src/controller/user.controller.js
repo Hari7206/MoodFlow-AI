@@ -45,7 +45,11 @@ async function registerUser(req, res) {
         expiresIn: "3d"
     })
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+})
 
 
     return res.status(201).json({
@@ -89,11 +93,11 @@ async function loginUser(req, res) {
         expiresIn: "3d"
     })
 
-    res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: false
-    })
+   res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none", 
+    secure: true       
+})
 
 
     return res.status(200).json({
