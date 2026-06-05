@@ -22,11 +22,13 @@ function Login() {
     )
   }
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    handleLogin(identifier, password)
+async function handleSubmit(e) {
+  e.preventDefault()
+  const success = await handleLogin(identifier, password)
+  if (success) {
     navigate("/")
   }
+}
 
   return (
     <main className="login-main">

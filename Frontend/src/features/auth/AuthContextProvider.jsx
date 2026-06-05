@@ -14,26 +14,20 @@ export function AuthContextProvider({ children }) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    async function handleLogin(identifier, password) {
-        try {
-
-            setLoading(true)
-
-            const data = await LoginUser(identifier, password)
-
-            setUser(data.user)
-
-        } catch (err) {
-
-            console.log(err)
-
-        } finally {
-
-            setLoading(false)
-
-        }
+   async function handleLogin(identifier, password) {
+    try {
+        setLoading(true)
+        const data = await LoginUser(identifier, password)
+        if (!data || !data.user) return false
+        setUser(data.user)
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
+    } finally {
+        setLoading(false)
     }
-
+}
     async function handleRegister(email, username, password) {
         try {
             setLoading(true)
