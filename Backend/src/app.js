@@ -12,11 +12,17 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    credentials: true,
-    origin: "http://localhost:5173"
-}))
 
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mood-flow-ai-nine.vercel.app"
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 
 // routes
