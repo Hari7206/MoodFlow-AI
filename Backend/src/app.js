@@ -16,7 +16,8 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://mood-flow-ai-nine.vercel.app"
+  "https://mood-flow-ai-nine.vercel.app",
+  "https://mood-flow-ai-lyart.vercel.app"  
 ];
 
 app.use(cors({
