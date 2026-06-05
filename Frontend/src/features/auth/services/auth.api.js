@@ -1,11 +1,13 @@
 import axios from "axios"
 
+import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}/api/auth`||"http://localhost:5000/api/auth",
-  withCredentials: true
-})
-
-
+  baseURL: `${BASE_URL}/api/auth`,
+  withCredentials: true,
+});
 export async function LoginUser(identifier, password) {
 
   try {
