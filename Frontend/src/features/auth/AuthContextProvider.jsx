@@ -10,6 +10,7 @@ import { LoginUser, LogoutUser, RegisterUser , getMe } from './services/auth.api
 export const AuthContext = createContext()
 
 export function AuthContextProvider({ children }) {
+// latest
 
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
