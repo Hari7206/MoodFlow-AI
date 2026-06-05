@@ -43,9 +43,10 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', fn)
   }, [])
 
-  useEffect(() => {
+useEffect(() => {
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
     axios
-      .get('http://localhost:3000/api/auth/get-me', { withCredentials: true })
+      .get(`${BASE_URL}/api/auth/get-me`, { withCredentials: true })
       .then((res) => {
         setUser(res.data?.user ?? null)
         setAuthReady(true)
@@ -55,6 +56,20 @@ export default function Navbar() {
         setAuthReady(true)
       })
   }, [])
+
+  const handleLogout = async () => {
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+    try {
+      await axios.get(`${BASE_URL}/api/auth/logout`, { withCredentials: true })
+    } catch (err) {
+      console.error('Logout failed:', err)
+    } finally {
+      setUser(null)
+      setDropOpen(false)
+      setMenuOpen(false)
+      navigate('/login')
+    }
+  }
 
   const handleLogout = async () => {
     try {
