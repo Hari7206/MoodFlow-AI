@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { initModel, startDetection } from "../utils/util";
-import "./FaceExpression.scss";
+import "./faceExpression.scss";
 
 export default function FaceExpression({ onClick = () => {} }) {
   const videoRef     = useRef(null);
