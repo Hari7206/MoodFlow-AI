@@ -1,6 +1,6 @@
 import { useAuth } from '../hooks/useAuth'
 import { Navigate } from 'react-router-dom'
-import "./Pocteted.css"
+import "./Protected.css"
 
 function Procteted({ children }) {
 
