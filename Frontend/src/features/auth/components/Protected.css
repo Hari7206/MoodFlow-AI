@@ -35,15 +35,19 @@
 
 /* ─── Wrapper ────────────────────────────────────────── */
 .db__loading {
-  position: relative;
+  position: fixed;        /* changed: covers full screen always */
+  top: 0;
+  left: 0;
+  width: 100vw;           /* full viewport width */
+  height: 100vh;          /* full viewport height */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   background: #0a0a0f;
   overflow: hidden;
   font-family: sans-serif;
+  z-index: 9999;          /* on top of everything */
 }
 
 /* ─── Spotlights ─────────────────────────────────────── */
