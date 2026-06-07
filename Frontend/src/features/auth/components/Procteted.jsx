@@ -53,7 +53,7 @@ function Procteted({ children }) {
   </div>
 
   {/* 4. Loading text — always last */}
-  <div className="db__label">Loading…</div>
+
 </div>
   </div>
 );

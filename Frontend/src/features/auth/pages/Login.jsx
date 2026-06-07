@@ -84,10 +84,10 @@ async function handleSubmit(e) {
             </div>
 
             <div className="login-form-meta">
-              <label className="login-remember">
+              {/* <label className="login-remember">
                 <input type="checkbox" /> Remember me
-              </label>
-              <a href="/forgot-password" className="login-forgot">Forgot password?</a>
+              </label> */}
+              {/* <a href="/forgot-password" className="login-forgot">Forgot password?</a> */}
             </div>
 
             <button type="submit">Sign In</button>
